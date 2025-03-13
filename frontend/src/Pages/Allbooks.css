@@ -76,3 +76,43 @@
     bottom: 0%;
     background-color: rgb(0, 0, 0);
 }
+
+.bookcard-status {
+  width: 100%;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.bookcard-status p {
+  font-size: 14px;
+  color: #555;
+  margin: 0;
+}
+
+.borrow-button {
+  width: 80%;
+  height: 35px;
+  margin: 10px auto;
+  background-color: #ea444a;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: block;
+}
+
+.borrow-button:hover {
+  background-color: #d13a3f;
+  transform: translateY(-2px);
+}
+
+.borrow-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}

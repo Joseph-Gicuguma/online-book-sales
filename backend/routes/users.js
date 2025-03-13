@@ -1,16 +1,37 @@
 import express from "express";
 import User from "../models/User.js";
+import mongoose from "mongoose";
 
 const router = express.Router()
 
-/* Getting user by id */
+/* Getting user by id, admission ID, or employee ID */
 router.get("/getuser/:id", async (req, res) => {
     try {
-        const user = await User.findById(req.params.id).populate("activeTransactions").populate("prevTransactions")
+        let user;
+        const id = req.params.id;
+        
+        // Check if the ID is a valid MongoDB ObjectId
+        if (mongoose.Types.ObjectId.isValid(id)) {
+            user = await User.findById(id).populate("activeTransactions").populate("prevTransactions");
+        } else {
+            // If not a valid ObjectId, try to find by admission ID or employee ID
+            user = await User.findOne({
+                $or: [
+                    { admissionId: id },
+                    { employeeId: id }
+                ]
+            }).populate("activeTransactions").populate("prevTransactions");
+        }
+        
+        if (!user) {
+            return res.status(404).json("User not found");
+        }
+        
         const { password, updatedAt, ...other } = user._doc;
-        res.status(200).json(other);
+        return res.status(200).json(other);
     } 
     catch (err) {
+        console.error("Error fetching user:", err);
         return res.status(500).json(err);
     }
 })
@@ -53,36 +74,48 @@ router.put("/updateuser/:id", async (req, res) => {
 
 /* Adding transaction to active transactions list */
 router.put("/:id/move-to-activetransactions" , async (req,res)=>{
-    if(req.body.isAdmin){
-        try{
-            const user = await User.findById(req.body.userId);
-            await user.updateOne({$push:{activeTransactions:req.params.id}})
-            res.status(200).json("Added to Active Transaction")
+    try{
+        const user = await User.findById(req.body.userId);
+        if (!user) {
+            return res.status(404).json("User not found");
         }
-        catch(err){
-            res.status(500).json(err)
-        }
+        await user.updateOne({$push:{activeTransactions:req.params.id}})
+        res.status(200).json("Added to Active Transaction")
     }
-    else{
-        res.status(403).json("Only Admin can add a transaction")
+    catch(err){
+        res.status(500).json(err)
     }
 })
 
 /* Adding transaction to previous transactions list and removing from active transactions list */
 router.put("/:id/move-to-prevtransactions", async (req,res)=>{
-    if(req.body.isAdmin){
-        try{
-            const user = await User.findById(req.body.userId);
-            await user.updateOne({$pull:{activeTransactions:req.params.id}})
-            await user.updateOne({$push:{prevTransactions:req.params.id}})
-            res.status(200).json("Added to Prev transaction Transaction")
+    try {
+        // Find the user
+        let user;
+        if (mongoose.Types.ObjectId.isValid(req.body.userId)) {
+            user = await User.findById(req.body.userId);
+        } else {
+            user = await User.findOne({
+                $or: [
+                    { admissionId: req.body.userId },
+                    { employeeId: req.body.userId }
+                ]
+            });
         }
-        catch(err){
-            res.status(500).json(err)
+        
+        if (!user) {
+            return res.status(404).json("User not found");
         }
+        
+        // Move transaction from active to previous
+        await user.updateOne({$pull:{activeTransactions:req.params.id}});
+        await user.updateOne({$push:{prevTransactions:req.params.id}});
+        
+        return res.status(200).json("Book returned successfully");
     }
-    else{
-        res.status(403).json("Only Admin can do this")
+    catch(err) {
+        console.error("Error returning book:", err);
+        return res.status(500).json(err);
     }
 })
 

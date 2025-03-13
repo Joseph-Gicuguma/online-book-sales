@@ -162,6 +162,28 @@
   color: white;
 }
 
+.return-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.return-button:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+.return-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
 @media screen and (max-width: 768px) {
   .user-details-topbar {
     flex-direction: column;

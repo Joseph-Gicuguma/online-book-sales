@@ -18,24 +18,72 @@ import moment from "moment";
 function MemberDashboard() {
   const [active, setActive] = useState("profile");
   const [sidebar, setSidebar] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const API_URL = process.env.REACT_APP_API_URL;
   const { user } = useContext(AuthContext);
   const [memberDetails, setMemberDetails] = useState(null);
 
+  // Function to fetch user details
+  const fetchMemberDetails = async () => {
+    try {
+      const response = await axios.get(
+        API_URL + "api/users/getuser/" + user._id
+      );
+      setMemberDetails(response.data);
+    } catch (err) {
+      console.log("Error in fetching the member details", err);
+    }
+  };
+
   useEffect(() => {
-    const getMemberDetails = async () => {
-      try {
-        const response = await axios.get(
-          API_URL + "api/users/getuser/" + user._id
-        );
-        setMemberDetails(response.data);
-      } catch (err) {
-        console.log("Error in fetching the member details");
-      }
-    };
-    getMemberDetails();
+    fetchMemberDetails();
   }, [API_URL, user]);
+
+  // Function to return a book
+  const returnBook = async (transactionId, bookId) => {
+    if (!window.confirm("Are you sure you want to return this book?")) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Get the borrower ID (either admissionId or employeeId)
+      const borrowerId = user.admissionId || user.employeeId || user._id;
+      
+      // Update transaction status
+      const currentDate = new Date();
+      const returnDateStr = moment(currentDate).format("MM/DD/YYYY");
+      
+      // Update the transaction
+      await axios.put(API_URL + `api/transactions/update-transaction/${transactionId}`, {
+        returnDate: returnDateStr,
+        transactionStatus: "Completed"
+      });
+      
+      // Move transaction from active to previous
+      await axios.put(API_URL + `api/users/${transactionId}/move-to-prevtransactions`, {
+        userId: borrowerId
+      });
+      
+      // Update book availability
+      const bookResponse = await axios.get(API_URL + "api/books/getbook/" + bookId);
+      const book = bookResponse.data;
+      
+      await axios.put(API_URL + "api/books/updatebook/" + bookId, {
+        bookCountAvailable: book.bookCountAvailable + 1
+      });
+      
+      alert("Book returned successfully!");
+      
+      // Refresh member details
+      fetchMemberDetails();
+    } catch (error) {
+      console.error("Error returning book:", error);
+      alert("Failed to return book: " + (error.response?.data || error.message));
+    }
+    setLoading(false);
+  };
 
   const logout = () => {
     localStorage.removeItem("user");
@@ -226,42 +274,56 @@ function MemberDashboard() {
           <div className="member-activebooks-content" id="activebooks@member">
             <p className="member-dashboard-heading">Issued</p>
             <table className="activebooks-table">
-              <tr>
-                <th>S.No</th>
-                <th>Book-Name</th>
-                <th>From Date</th>
-                <th>To Date</th>
-                <th>Fine</th>
-              </tr>
-              {memberDetails?.activeTransactions
-                ?.filter((data) => {
-                  return data.transactionType === "Issued";
-                })
-                .map((data, index) => {
-                  return (
-                    <tr key={index}>
-                      <td>{index + 1}</td>
-                      <td>{data.bookName}</td>
-                      <td>{data.fromDate}</td>
-                      <td>{data.toDate}</td>
-                      <td>
-                        {Math.floor(
-                          (Date.parse(moment(new Date()).format("MM/DD/YYYY")) -
-                            Date.parse(data.toDate)) /
-                            86400000
-                        ) <= 0
-                          ? 0
-                          : Math.floor(
-                              (Date.parse(
-                                moment(new Date()).format("MM/DD/YYYY")
-                              ) -
-                                Date.parse(data.toDate)) /
-                                86400000
-                            ) * 10}
-                      </td>
-                    </tr>
-                  );
-                })}
+              <thead>
+                <tr>
+                  <th>S.No</th>
+                  <th>Book-Name</th>
+                  <th>From Date</th>
+                  <th>To Date</th>
+                  <th>Fine</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {memberDetails?.activeTransactions
+                  ?.filter((data) => {
+                    return data.transactionType === "Issued";
+                  })
+                  .map((data, index) => {
+                    return (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>{data.bookName}</td>
+                        <td>{data.fromDate}</td>
+                        <td>{data.toDate}</td>
+                        <td>
+                          {Math.floor(
+                            (Date.parse(moment(new Date()).format("MM/DD/YYYY")) -
+                              Date.parse(data.toDate)) /
+                              86400000
+                          ) <= 0
+                            ? 0
+                            : Math.floor(
+                                (Date.parse(
+                                  moment(new Date()).format("MM/DD/YYYY")
+                                ) -
+                                  Date.parse(data.toDate)) /
+                                  86400000
+                              ) * 10}
+                        </td>
+                        <td>
+                          <button 
+                            className="return-button"
+                            onClick={() => returnBook(data._id, data.bookId)}
+                            disabled={loading}
+                          >
+                            Return
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
             </table>
           </div>
 
@@ -271,49 +333,57 @@ function MemberDashboard() {
           >
             <p className="member-dashboard-heading">Reserved</p>
             <table className="activebooks-table">
-              <tr>
-                <th>S.No</th>
-                <th>Book-Name</th>
-                <th>From</th>
-                <th>To</th>
-              </tr>
-              {memberDetails?.activeTransactions
-                ?.filter((data) => {
-                  return data.transactionType === "Reserved";
-                })
-                .map((data, index) => {
+              <thead>
+                <tr>
+                  <th>S.No</th>
+                  <th>Book-Name</th>
+                  <th>From</th>
+                  <th>To</th>
+                </tr>
+              </thead>
+              <tbody>
+                {memberDetails?.activeTransactions
+                  ?.filter((data) => {
+                    return data.transactionType === "Reserved";
+                  })
+                  .map((data, index) => {
+                    return (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>{data.bookName}</td>
+                        <td>{data.fromDate}</td>
+                        <td>{data.toDate}</td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+          </div>
+          <div className="member-history-content" id="history@member">
+            <p className="member-dashboard-heading">History</p>
+            <table className="activebooks-table">
+              <thead>
+                <tr>
+                  <th>S.No</th>
+                  <th>Book-Name</th>
+                  <th>From</th>
+                  <th>To</th>
+                  <th>Return Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {memberDetails?.prevTransactions?.map((data, index) => {
                   return (
                     <tr key={index}>
                       <td>{index + 1}</td>
                       <td>{data.bookName}</td>
                       <td>{data.fromDate}</td>
                       <td>{data.toDate}</td>
+                      <td>{data.returnDate}</td>
                     </tr>
                   );
                 })}
-            </table>
-          </div>
-          <div className="member-history-content" id="history@member">
-            <p className="member-dashboard-heading">History</p>
-            <table className="activebooks-table">
-              <tr>
-                <th>S.No</th>
-                <th>Book-Name</th>
-                <th>From</th>
-                <th>To</th>
-                <th>Return Date</th>
-              </tr>
-              {memberDetails?.prevTransactions?.map((data, index) => {
-                return (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>{data.bookName}</td>
-                    <td>{data.fromDate}</td>
-                    <td>{data.toDate}</td>
-                    <td>{data.returnDate}</td>
-                  </tr>
-                );
-              })}
+              </tbody>
             </table>
           </div>
         </div>

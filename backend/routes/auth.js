@@ -49,14 +49,19 @@ router.post("/signin", async (req, res) => {
 
     console.log(user, "user");
 
-    !user && res.status(404).json("User not found");
+    if (!user) {
+      return res.status(404).json("User not found");
+    }
 
     const validPass = await bcrypt.compare(req.body.password, user.password);
-    !validPass && res.status(400).json("Wrong Password");
+    if (!validPass) {
+      return res.status(400).json("Wrong Password");
+    }
 
-    res.status(200).json(user);
+    return res.status(200).json(user);
   } catch (err) {
     console.log(err);
+    return res.status(500).json("Server error");
   }
 });
 

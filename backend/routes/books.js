@@ -65,21 +65,40 @@ router.post("/addbook", async (req, res) => {
     }
 })
 
-/* Addding book */
+/* Updating book */
 router.put("/updatebook/:id", async (req, res) => {
-    if (req.body.isAdmin) {
+    // Allow both regular users and admins to update book availability
+    // when borrowing or returning books
+    if (req.body.hasOwnProperty('bookCountAvailable')) {
+        try {
+            // Only update the bookCountAvailable field
+            await Book.findByIdAndUpdate(req.params.id, {
+                $set: { 
+                    bookCountAvailable: req.body.bookCountAvailable,
+                    // Update book status based on availability
+                    bookStatus: req.body.bookCountAvailable > 0 ? "Available" : "Not Available"
+                },
+            });
+            return res.status(200).json("Book availability updated successfully");
+        }
+        catch (err) {
+            return res.status(500).json(err);
+        }
+    }
+    // For other types of updates, require admin privileges
+    else if (req.body.isAdmin) {
         try {
             await Book.findByIdAndUpdate(req.params.id, {
                 $set: req.body,
             });
-            res.status(200).json("Book details updated successfully");
+            return res.status(200).json("Book details updated successfully");
         }
         catch (err) {
-            res.status(504).json(err);
+            return res.status(500).json(err);
         }
     }
     else {
-        return res.status(403).json("You dont have permission to delete a book!");
+        return res.status(403).json("You don't have permission to update book details!");
     }
 })
 
