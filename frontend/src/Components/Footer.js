@@ -14,11 +14,9 @@ function Footer() {
                     <div className="contact-details">
                         <h1>Contact Us</h1>
                         <p>Librarian</p>
-                        <p>Government School</p>
-                        <p>Visakhapatnam-530041</p>
-                        <p>Andhra Pradesh</p>
-                        <p>India</p>
-                        <p><b>Email:</b>example@gmail.com</p>
+                        <p>Yvonne Chege</p>
+                        <p>Nairobi Kenya</p>
+                        <p><b>Email:</b>yvonne.chege@gmail.com</p>
                     </div>
                     <div className='usefull-links'>
                         <h1>Usefull Links</h1>
@@ -42,7 +40,7 @@ function Footer() {
                 </div>
             </div>
             <div className='copyright-details'>
-                <p className='footer-copyright'>&#169; 2020 copyright all right reserved<br /><span>Designed with ❤️ by Pranavdhar Reddy</span></p>
+                <p className='footer-copyright'>&#169; 2025 copyright all right reserved<br /><span>Designed with ❤️ by Yvonne Chege</span></p>
             </div>
         </div>
     )
