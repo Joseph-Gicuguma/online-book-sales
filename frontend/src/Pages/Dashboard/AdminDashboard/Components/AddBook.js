@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import "../AdminDashboard.css"
 import axios from "axios"
 import { AuthContext } from '../../../../Context/AuthContext'
+import { useAlert } from '../../../../Context/AlertContext'
 import { Dropdown } from 'semantic-ui-react'
 
 function AddBook() {
@@ -9,6 +10,7 @@ function AddBook() {
     const API_URL = process.env.REACT_APP_API_URL
     const [isLoading, setIsLoading] = useState(false)
     const { user } = useContext(AuthContext)
+    const { success, error, warning, info } = useAlert()
 
     const [bookName, setBookName] = useState("")
     const [alternateTitle, setAlternateTitle] = useState("")
@@ -33,10 +35,11 @@ function AddBook() {
             }
             catch (err) {
                 console.log(err)
+                error("Failed to load categories. Please try again.")
             }
         }
         getAllCategories()
-    }, [API_URL])
+    }, [API_URL, error])
 
     /* Adding book function */
     const addBook = async (e) => {
@@ -65,10 +68,11 @@ function AddBook() {
             setLanguage("")
             setPublisher("")
             setSelectedCategories([])
-            alert("Book Added Successfully 🎉")
+            success("Book Added Successfully 🎉")
         }
         catch (err) {
             console.log(err)
+            error("Failed to add book. Please try again.")
         }
         setIsLoading(false)
     }
@@ -76,11 +80,16 @@ function AddBook() {
 
     useEffect(() => {
         const getallBooks = async () => {
-            const response = await axios.get(API_URL + "api/books/allbooks")
-            setRecentAddedBooks(response.data.slice(0, 5))
+            try {
+                const response = await axios.get(API_URL + "api/books/allbooks")
+                setRecentAddedBooks(response.data.slice(0, 5))
+            } catch (err) {
+                console.log(err)
+                error("Failed to load recent books. Please try again.")
+            }
         }
         getallBooks()
-    }, [API_URL])
+    }, [API_URL, error])
 
 
     return (

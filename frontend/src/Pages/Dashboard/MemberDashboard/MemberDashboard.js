@@ -12,6 +12,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import DoubleArrowIcon from "@material-ui/icons/DoubleArrow";
 import { IconButton } from "@material-ui/core";
 import { AuthContext } from "../../../Context/AuthContext";
+import { useAlert } from "../../../Context/AlertContext";
 import axios from "axios";
 import moment from "moment";
 
@@ -22,6 +23,7 @@ function MemberDashboard() {
 
   const API_URL = process.env.REACT_APP_API_URL;
   const { user } = useContext(AuthContext);
+  const { success, error, warning, info } = useAlert();
   const [memberDetails, setMemberDetails] = useState(null);
 
   // Function to fetch user details
@@ -33,6 +35,7 @@ function MemberDashboard() {
       setMemberDetails(response.data);
     } catch (err) {
       console.log("Error in fetching the member details", err);
+      error("Failed to load your profile details. Please try again.");
     }
   };
 
@@ -74,13 +77,13 @@ function MemberDashboard() {
         bookCountAvailable: book.bookCountAvailable + 1
       });
       
-      alert("Book returned successfully!");
+      success("Book returned successfully!");
       
       // Refresh member details
       fetchMemberDetails();
-    } catch (error) {
-      console.error("Error returning book:", error);
-      alert("Failed to return book: " + (error.response?.data || error.message));
+    } catch (err) {
+      console.error("Error returning book:", err);
+      error("Failed to return book: " + (err.response?.data || err.message));
     }
     setLoading(false);
   };

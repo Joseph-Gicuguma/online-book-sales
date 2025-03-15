@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import "../AdminDashboard.css"
 import axios from "axios"
 import { Dropdown } from 'semantic-ui-react'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from 'moment';
+import { useAlert } from '../../../../Context/AlertContext'
 
 function AddMember() {
 
     const API_URL = process.env.REACT_APP_API_URL
     const [isLoading, setIsLoading] = useState(false)
+    const { success, error, warning, info } = useAlert()
 
     const [userFullName, setUserFullName] = useState(null)
     const [admissionId, setAdmissionId] = useState(null)
@@ -72,14 +74,15 @@ function AddMember() {
                 setAge(null)
                 setDob(null)
                 setDobString(null)
-                alert("Member Added")
+                success("Member Added Successfully")
             }
             catch (err) {
                 console.log(err)
+                error("Failed to add member. Please try again.")
             }
         }
         else {
-            alert("All the fields must be filled")
+            warning("All fields must be filled")
         }
         setIsLoading(false)
     }
@@ -94,10 +97,11 @@ function AddMember() {
             }
             catch (err) {
                 console.log(err)
+                error("Failed to load members. Please try again.")
             }
         }
         getMembers()
-    }, [API_URL])
+    }, [API_URL, error])
 
     return (
         <div>

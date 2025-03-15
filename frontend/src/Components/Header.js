@@ -19,7 +19,7 @@ function Header() {
                 <div className="logo">
                     <Link to="/" className="logo-link">
                         <span className="logo-icon">📚</span>
-                        <span className="logo-text">LibraryOS</span>
+                        <span className="logo-text">Online Book Sales</span>
                     </Link>
                 </div>
                 

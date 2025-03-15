@@ -6,11 +6,14 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AuthContextProvider } from './Context/AuthContext';
+import { AlertProvider } from './Context/AlertContext';
 
 ReactDOM.render(
   <React.StrictMode>
     <AuthContextProvider>
-      <App />
+      <AlertProvider>
+        <App />
+      </AlertProvider>
     </AuthContextProvider>
   </React.StrictMode>,
   document.getElementById('root')
