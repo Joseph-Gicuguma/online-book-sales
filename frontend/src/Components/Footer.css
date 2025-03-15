@@ -1,19 +1,26 @@
 .footer {
   display: flex;
   flex-direction: column;
-  background-color: black;
-  color: wheat;
+  background-color: var(--primary-dark);
+  color: var(--white);
+  padding: 40px 0 0 0;
+  font-family: var(--font-family);
 }
 
 .footer-data {
   display: flex;
   justify-content: space-around;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 20px;
 }
 
 .contact-details {
   text-align: left;
-  letter-spacing: 1.5px;
+  letter-spacing: 1px;
   margin: 15px;
+  flex: 1;
 }
 
 .usefull-links {
@@ -21,57 +28,95 @@
   flex-direction: column;
   text-align: left;
   text-decoration: none;
-  letter-spacing: 1.5px;
+  letter-spacing: 1px;
   margin: 15px;
+  flex: 1;
 }
 
 .usefull-links a {
-  color: wheat;
+  color: var(--light-gray);
+  text-decoration: none;
+  margin: 5px 0;
+  transition: var(--transition);
+}
+
+.usefull-links a:hover {
+  color: var(--white);
+  transform: translateX(5px);
 }
 
 .librarian-details {
   text-align: left;
-  letter-spacing: 1.5px;
+  letter-spacing: 1px;
   margin: 15px;
+  flex: 1;
 }
 
 .contact-details h1,
 .usefull-links h1,
 .librarian-details h1 {
-  font-size: 25px;
-  color: rgb(235, 88, 75);
+  font-size: var(--font-size-large);
+  color: var(--secondary-color);
   padding-bottom: 15px;
   border-bottom-style: solid;
-  border-bottom-width: 3.1px;
+  border-bottom-width: 2px;
+  border-bottom-color: var(--secondary-light);
   width: fit-content;
+  margin-bottom: 20px;
 }
 
 .contact-social {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 20px 0px;
+  margin: 30px 0px;
 }
 
 .social-icon {
-  margin: 10px;
+  margin: 0 15px;
+  font-size: 24px;
+  color: var(--white);
+  transition: var(--transition);
+}
+
+.social-icon:hover {
+  color: var(--secondary-color);
+  transform: translateY(-3px);
+}
+
+.copyright-details {
+  background-color: rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
 }
 
 .copyright-details p {
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: 1.15px;
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  letter-spacing: 1px;
   text-align: center;
   padding: 20px 10px;
+  margin: 0;
 }
 
 .copyright-details span {
-  font-size: 15px;
+  font-size: var(--font-size-small);
+  opacity: 0.8;
 }
 
 @media screen and (max-width: 768px) {
   .footer-data {
-    display: flex;
     flex-direction: column;
+  }
+  
+  .contact-details,
+  .usefull-links,
+  .librarian-details {
+    margin: 10px 0;
+  }
+  
+  .contact-details h1,
+  .usefull-links h1,
+  .librarian-details h1 {
+    margin-top: 20px;
   }
 }

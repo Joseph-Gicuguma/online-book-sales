@@ -2,42 +2,39 @@
   display: grid;
   place-items: center;
   height: 100vh;
-  background-color: wheat;
+  background-color: var(--light-bg);
   position: relative;
 }
 
 .dashboard-card {
-  font-family: sans-serif;
+  font-family: var(--font-family);
   width: 80vw;
   height: 90vh;
   margin: 60px auto;
   display: flex;
-  background-color: #fefaf5;
-  border-radius: 15px;
-  -webkit-box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2),
-    0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12);
-  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2),
-    0px 6px 10px 0px rgba(0, 0, 0, 0.14), 0px 1px 18px 0px rgba(0, 0, 0, 0.12);
+  background-color: var(--white);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--box-shadow);
 }
 
 /* Sidebar */
 
 .dashboard-options {
-  background-color: rgb(24, 33, 62);
-  color: wheat;
+  background-color: var(--primary-dark);
+  color: var(--white);
   display: flex;
   flex-direction: column;
   flex: 0.25;
   width: 40vw;
-  border-top-left-radius: 15px;
-  border-bottom-left-radius: 15px;
+  border-top-left-radius: var(--border-radius-lg);
+  border-bottom-left-radius: var(--border-radius-lg);
 }
 
 .dashboard-logo {
   margin-top: 50px;
   margin-bottom: 50px !important;
-  color: rgb(234, 68, 74);
-  font-size: 30px;
+  color: var(--secondary-color);
+  font-size: var(--font-size-xxl);
   font-weight: 800;
   text-align: center;
 }
@@ -45,28 +42,27 @@
 .dashboard-option {
   text-decoration: none;
   padding: 15px;
-  border-bottom: 0.5px solid salmon;
-  border-top: 1px solid rgb(234, 68, 74, 0.5);
-  color: #ffff;
+  border-bottom: 0.5px solid var(--secondary-light);
+  border-top: 1px solid rgba(var(--secondary-rgb), 0.5);
+  color: var(--white);
   font-weight: 700;
   text-align: left;
   display: flex;
   align-items: center;
   cursor: pointer;
+  transition: var(--transition);
 }
 
 .dashboard-option:hover {
-  color: rgb(234, 68, 74);
-  border-left: 5px solid rgb(234, 68, 74);
-  transition: all 0.5s ease;
-  background-color: #ddd;
+  color: var(--secondary-color);
+  border-left: 5px solid var(--secondary-color);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .dashboard-option.clicked {
-  color: rgb(234, 68, 74);
-  border-left: 5px solid rgb(234, 68, 74);
-  transition: all 0.5s ease;
-  background-color: #ddd;
+  color: var(--secondary-color);
+  border-left: 5px solid var(--secondary-color);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Content of each option in Sidebar */
@@ -75,6 +71,7 @@
   display: flex;
   flex: 0.75;
   width: 80vw;
+  overflow-y: auto;
 }
 
 .dashboard-option-icon {
@@ -87,31 +84,34 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  overflow-y: scroll;
+  overflow-y: auto;
+  padding: 20px;
 }
 
 .dashboard-addbooks-content::-webkit-scrollbar,
-.dashboard-addmember-content::-webkit-scrollbar {
+.dashboard-addmember-content::-webkit-scrollbar,
+.dashboard-option-content::-webkit-scrollbar {
   display: none;
 }
 
 .dashboard-option-title {
   text-align: left;
-  margin: 10px 25px !important;
-  font-size: 20px;
-  font-weight: 800;
+  margin: 20px 25px !important;
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--text-color);
 }
 
 .dashboard-title-line {
   text-align: center;
   font-weight: bold;
-  border-bottom: 2px solid rgb(245 239 239);
+  border-bottom: 2px solid var(--light-gray);
   line-height: 2px;
-  margin-bottom: 10px !important;
+  margin-bottom: 20px !important;
 }
 
 .shortinfo-table {
-  margin-top: 5px !important;
+  margin-top: 15px !important;
   width: 100% !important;
 }
 
@@ -141,7 +141,7 @@
     width: 25px;
   }
   .dashboard-logo {
-    font-size: 20px;
+    font-size: var(--font-size-xl);
     margin-bottom: 50px !important;
   }
 
@@ -158,7 +158,7 @@
     display: flex;
     position: fixed;
     left: 0;
-    transition: all 0.5s ease;
+    transition: var(--transition);
     z-index: 5;
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
@@ -173,48 +173,63 @@
 .addbook-form-input,
 .addmember-form-input,
 .transaction-form-input {
-  padding: 8px;
+  padding: 12px;
   width: 100%;
   max-width: 400px;
   outline: none;
-  border-radius: 5px;
-  font-size: 18px;
-  border: 1px solid rgb(219, 219, 219);
-  background-color: rgb(255, 255, 255);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-base);
+  border: 1px solid var(--light-gray);
+  background-color: var(--white);
+  font-family: var(--font-family);
+  transition: var(--transition);
+}
+
+.addbook-form-input:focus,
+.addmember-form-input:focus,
+.transaction-form-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
 }
 
 .addbook-form-label,
 .addmember-form-label,
 .transaction-form-label {
-  color: black;
+  color: var(--text-color);
   font-weight: 600;
-  margin-top: 10px;
-  font-size: 18px;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  font-size: var(--font-size-medium);
+  display: block;
 }
 
 .addbook-submit,
 .addmember-submit,
 .transaction-form-submit {
-  padding: 8px 10px;
-  border: 2px solid wheat;
-  background-color: rgb(234, 68, 74);
-  color: wheat;
+  padding: 10px 16px;
+  border: 2px solid transparent;
+  background-color: var(--secondary-color);
+  color: var(--white);
   font-weight: 600;
-  margin-top: 15px;
-  border-radius: 5px;
+  margin-top: 20px;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-family: var(--font-family);
+  transition: var(--transition);
 }
 
 .addbook-submit:hover,
 .addmember-submit:hover,
 .transaction-form-submit:hover {
-  background-color: wheat;
-  color: rgb(234, 68, 74);
-  border: 2px solid rgb(234, 68, 74);
-  transition: all ease 0.5s;
+  background-color: var(--white);
+  color: var(--secondary-color);
+  border: 2px solid var(--secondary-color);
+  transform: translateY(-2px);
 }
 
 .required-field {
-  color: red;
+  color: var(--error);
+  margin-left: 4px;
 }
 
 .dashboard-addbooks-content,
@@ -222,74 +237,76 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  padding: 20px;
 }
 
 .admindashboard-table {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-family);
   border-collapse: collapse;
   width: 95%;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 50px !important;
+  box-shadow: var(--box-shadow);
+  border-radius: var(--border-radius);
+  overflow: hidden;
 }
 
 .admindashboard-table td,
 .admindashboard-table th {
-  border: 1px solid #ddd;
-  padding: 8px;
-  font-size: 14px;
+  border: 1px solid var(--light-gray);
+  padding: 12px;
+  font-size: var(--font-size-base);
   text-align: center;
+}
+
+.admindashboard-table tr:nth-child(even) {
+  background-color: var(--light-bg);
+}
+
+.admindashboard-table tr:hover {
+  background-color: rgba(var(--primary-rgb), 0.05);
 }
 
 .admindashboard-table th {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: center;
-  background-color: rgb(24, 33, 62);
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--white);
+  font-weight: 600;
 }
 
 .transaction-form-dropdown {
-  padding: 6px 5px;
-  outline: none;
-  border: 1px solid rgb(219, 219, 219);
-  color: rgb(37, 37, 37);
-  background-color: rgb(254, 250, 245);
-  font-size: 15px;
-  font-weight: 600;
-  margin: 10px 0;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.transaction-form-dropdown option {
-  color: black;
-  background-color: #ddd;
-  font-size: 18px;
-}
-
-.semanticdropdown {
+  padding: 12px;
   width: 100%;
   max-width: 400px;
+  outline: none;
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-base);
+  border: 1px solid var(--light-gray);
+  background-color: var(--white);
+  font-family: var(--font-family);
+  transition: var(--transition);
 }
 
-@media screen and (max-width: 768px) {
-  .semanticdropdown {
-    max-width: 280px;
-  }
+.transaction-form-dropdown:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
 }
 
 .date-picker {
-  padding: 5px 10px;
-  outline: none;
-  border: 1px solid lightgray;
-  font-size: 18px;
+  padding: 12px;
+  width: 100%;
+  max-width: 400px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--light-gray);
+  font-family: var(--font-family);
 }
 
-.getmember-dropdown {
-  margin: 25px 0 0 25px;
-}
-
+.getmember-dropdown,
 .returnbook-dropdown {
-  margin: 25px 0px 25px 30px !important;
+  margin-top: 15px;
+  width: 100%;
+  max-width: 400px;
 }
