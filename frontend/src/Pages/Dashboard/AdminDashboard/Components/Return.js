@@ -5,12 +5,14 @@ import { Dropdown } from 'semantic-ui-react'
 import '../../MemberDashboard/MemberDashboard.css'
 import moment from "moment"
 import { AuthContext } from '../../../../Context/AuthContext'
+import { useAlert } from '../../../../Context/AlertContext'
 
 
 function Return() {
 
     const API_URL = process.env.REACT_APP_API_URL
     const { user } = useContext(AuthContext)
+    const { success, error, warning, info } = useAlert()
 
     const [allTransactions, setAllTransactions] = useState([])
     const [ExecutionStatus, setExecutionStatus] = useState(null) /* For triggering the tabledata to be updated */ 
@@ -30,10 +32,11 @@ function Return() {
             }
             catch (err) {
                 console.log(err)
+                error("Failed to load members. Please try again.")
             }
         }
         getMembers()
-    }, [API_URL])
+    }, [API_URL, error])
 
 
     /* Getting all active transactions */
@@ -49,10 +52,11 @@ function Return() {
             }
             catch(err){
                 console.log(err)
+                error("Failed to load transactions. Please try again.")
             }
         }
         getAllTransactions()
-    },[API_URL,ExecutionStatus])
+    },[API_URL, ExecutionStatus, error])
 
 
     const returnBook = async (transactionId,borrowerId,bookId,due) =>{
@@ -95,10 +99,11 @@ function Return() {
             })
 
             setExecutionStatus("Completed");
-            alert("Book returned to the library successfully")
+            success("Book returned to the library successfully")
         }
         catch(err){
             console.log(err)
+            error("Failed to return book. Please try again.")
         }
     }
 
@@ -109,10 +114,11 @@ function Return() {
                 isAdmin:user.isAdmin
             })
             setExecutionStatus("Completed");
-            alert("Book issued succesfully 🎆")
+            success("Book issued successfully 🎆")
         }
         catch(err){
             console.log(err)
+            error("Failed to issue book. Please try again.")
         }
     }
 

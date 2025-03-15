@@ -1,58 +1,53 @@
 import { React, useState } from 'react'
 import { Link } from 'react-router-dom'
-import './Header.css'
-
-import MenuIcon from '@material-ui/icons/Menu';
-import ClearIcon from '@material-ui/icons/Clear';
+import './HeaderNew.css'
 
 function Header() {
+    const [menuToggle, setMenuToggle] = useState(false)
 
-    const [menutoggle, setMenutoggle] = useState(false)
-
-    const Toggle = () => {
-        setMenutoggle(!menutoggle)
+    const toggleMenu = () => {
+        setMenuToggle(!menuToggle)
     }
 
     const closeMenu = () => {
-        setMenutoggle(false)
+        setMenuToggle(false)
     }
 
     return (
-        <div className="header">
-            <div className="logo-nav">
-            <Link to='/'>
-                <a href="#home">LIBRARY</a>
-            </Link>
+        <header className="header">
+            <div className="header-container">
+                <div className="logo">
+                    <Link to="/" className="logo-link">
+                        <span className="logo-icon">📚</span>
+                        <span className="logo-text">Online Book Sales</span>
+                    </Link>
+                </div>
+                
+                <nav className={menuToggle ? "nav-menu active" : "nav-menu"}>
+                    <ul className="nav-list">
+                        <li className="nav-item">
+                            <Link to="/" className="nav-link" onClick={closeMenu}>Home</Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link to="/" className="nav-link" onClick={closeMenu}>About Us</Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link to="/books" className="nav-link" onClick={closeMenu}>Books</Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link to="/" className="nav-link" onClick={closeMenu}>Contact</Link>
+                        </li>
+                    </ul>
+                </nav>
+                
+                <div className="header-actions">
+                    <Link to="/signin" className="get-started-btn">Get Started</Link>
+                    <button className="mobile-menu-btn" onClick={toggleMenu}>
+                        <span className={menuToggle ? "hamburger active" : "hamburger"}></span>
+                    </button>
+                </div>
             </div>
-            <div className='nav-right'>
-                <input className='search-input' type='text' placeholder='Search a Book'/>
-                <ul className={menutoggle ? "nav-options active" : "nav-options"}>
-                    <li className="option" onClick={() => { closeMenu() }}>
-                        <Link to='/'>
-                            <a href="#home">Home</a>
-                        </Link>
-                    </li>
-                    <li className="option" onClick={() => { closeMenu() }}>
-                        <Link to='/books'>
-                        <a href="#books">Books</a>
-                        </Link>
-                    </li>
-                    <li className="option" onClick={() => { closeMenu() }}>
-                        <Link to='/signin'>
-                        <a href='signin'>SignIn</a>
-                        </Link>
-                    </li>
-                </ul>
-            </div>
-
-            <div className="mobile-menu" onClick={() => { Toggle() }}>
-                {menutoggle ? (
-                    <ClearIcon className="menu-icon" style={{ fontSize: 40 }} />
-                ) : (
-                    <MenuIcon className="menu-icon" style={{ fontSize: 40 }} />
-                )}
-            </div>
-        </div>
+        </header>
     )
 }
 

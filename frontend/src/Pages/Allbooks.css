@@ -1,80 +1,84 @@
-.books-page{
-    height: 100vh;
-    width: 100vw;
-    background-color: wheat;
+.books-page {
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--light-bg);
+  padding-top: 90px; /* Account for fixed header */
+  padding-bottom: 40px;
 }
 
-.books{
-    margin: 60px auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-    padding: 15px;
-    max-width: 1024px;
+.books {
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
+  padding: 20px;
+  max-width: 1200px;
 }
 
-.book-card{
-    display: flex;
-    flex-direction: column;
-    box-sizing: content-box;
-    height: auto;
-    width: 250px;
-    align-items: center;
-    padding: 25px;
-    margin: 10px;
-    -webkit-box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
-    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
-    border-radius: 15px;
-    position: relative;
-    background-color: rgb(238, 238, 238);
+.book-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  padding: 25px;
+  box-shadow: var(--box-shadow);
+  border-radius: var(--border-radius);
+  position: relative;
+  background-color: var(--white);
+  transition: var(--transition);
 }
 
-.book-card img{
-    width: 150px;
-    height: auto;
-    margin-bottom: 25px!important;
-    border-radius: 18px;
+.book-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-.book-card img:hover{
-    transform: scale(1.05);
-    transition: all ease 1.3s;
+.book-card img {
+  width: 160px;
+  height: 220px;
+  object-fit: cover;
+  margin-bottom: 20px !important;
+  border-radius: var(--border-radius);
+  transition: var(--transition);
 }
 
-.bookcard-title{
-    word-wrap: break-word;
-    text-align: center;
-    font-weight: 600;
-    font-size: 16px;
+.book-card img:hover {
+  transform: scale(1.05);
 }
 
-.bookcard-author{
-    color: rgb(141, 140, 140);
-    font-size: 14px;
-    font-weight: 900;
+.bookcard-title {
+  word-wrap: break-word;
+  text-align: center;
+  font-weight: 700;
+  font-size: var(--font-size-medium);
+  color: var(--text-color);
+  margin-bottom: 8px;
 }
 
-.bookcard-category{
-    display: flex;
-    flex-wrap: wrap;
-    position: absolute;
-    bottom: 5%;
-    left: 5%;
+.bookcard-author {
+  color: var(--text-light);
+  font-size: var(--font-size-small);
+  font-weight: 500;
+  margin-bottom: 15px;
 }
 
-.bookcard-category p{
-    padding: 8px 15px;
-    background-color: lightgray;
-    font-weight: 600;
-    margin: 5px;
-    border-radius: 5px;
+.bookcard-category {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 15px;
 }
 
-.bookcard-emptybox{
-    height: 50px;
-    position: relative;
-    bottom: 0%;
-    background-color: rgb(0, 0, 0);
+.bookcard-category p {
+  padding: 6px 12px;
+  background-color: var(--light-bg);
+  font-weight: 500;
+  font-size: var(--font-size-small);
+  margin: 5px;
+  border-radius: 20px;
+  color: var(--primary-color);
 }
 
 .bookcard-status {
@@ -83,36 +87,67 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 5px;
+  margin: 10px 0;
 }
 
 .bookcard-status p {
-  font-size: 14px;
-  color: #555;
+  font-size: var(--font-size-small);
+  color: var(--text-light);
   margin: 0;
+  font-weight: 500;
 }
 
 .borrow-button {
-  width: 80%;
-  height: 35px;
-  margin: 10px auto;
-  background-color: #ea444a;
-  color: white;
+  width: 100%;
+  padding: 10px 0;
+  margin: 10px 0;
+  background-color: var(--primary-color);
+  color: var(--white);
   border: none;
-  border-radius: 5px;
-  font-weight: bold;
+  border-radius: var(--border-radius);
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  display: block;
+  transition: var(--transition);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
 }
 
 .borrow-button:hover {
-  background-color: #d13a3f;
+  background-color: var(--primary-dark);
   transform: translateY(-2px);
 }
 
 .borrow-button:disabled {
-  background-color: #ccc;
+  background-color: var(--light-gray);
+  cursor: not-allowed;
+  transform: none;
+  color: var(--gray);
+}
+
+/* Add a reserve button style */
+.reserve-button {
+  width: 100%;
+  padding: 10px 0;
+  margin: 10px 0;
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+}
+
+.reserve-button:hover {
+  background-color: rgba(67, 97, 238, 0.1);
+  transform: translateY(-2px);
+}
+
+.reserve-button:disabled {
+  border-color: var(--light-gray);
+  color: var(--gray);
   cursor: not-allowed;
   transform: none;
 }

@@ -7,6 +7,7 @@ import Header from './Components/Header';
 import AdminDashboard from './Pages/Dashboard/AdminDashboard/AdminDashboard.js';
 import { useContext } from "react"
 import { AuthContext } from "./Context/AuthContext.js"
+import AlertComponent from './Components/AlertComponent';
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
   return (
     <Router>
       <Header />
+      <AlertComponent />
       <div className="App">
         <Switch>
           <Route exact path='/'>

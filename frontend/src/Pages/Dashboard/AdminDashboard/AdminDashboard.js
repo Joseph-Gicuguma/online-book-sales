@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import "./AdminDashboard.css"
 import AddTransaction from './Components/AddTransaction'
 import AddMember from './Components/AddMember'
@@ -17,7 +17,8 @@ import GetMember from './Components/GetMember';
 import AssignmentReturnIcon from '@material-ui/icons/AssignmentReturn';
 import Return from './Components/Return';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
-
+import { AuthContext } from '../../../Context/AuthContext';
+import axios from 'axios';
 
 /* Semantic UI Dropdown Styles Import */
 const styleLink = document.createElement("link");
@@ -29,6 +30,25 @@ function AdminDashboard() {
 
     const [active, setActive] = useState("addbooks")
     const [sidebar, setSidebar] = useState(false)
+    const [adminDetails, setAdminDetails] = useState(null)
+    const API_URL = process.env.REACT_APP_API_URL
+    const { user } = useContext(AuthContext)
+
+    // Function to fetch admin details
+    const fetchAdminDetails = async () => {
+        try {
+            const response = await axios.get(
+                API_URL + "api/users/getuser/" + user._id
+            );
+            setAdminDetails(response.data);
+        } catch (err) {
+            console.log("Error in fetching the admin details", err);
+        }
+    };
+
+    useEffect(() => {
+        fetchAdminDetails();
+    }, [API_URL, user]);
 
     /* Logout Function*/
     const logout = () => {
@@ -62,6 +82,80 @@ function AdminDashboard() {
 
                 </div>
                 <div className="dashboard-option-content">
+                    <div className="member-profile-content" style={active !== "profile" ? { display: 'none' } : {}}>
+                        <div className="user-details-topbar">
+                            <img
+                                className="user-profileimage"
+                                src="./assets/images/Profile.png"
+                                alt=""
+                            ></img>
+                            <div className="user-info">
+                                <p className="user-name">{adminDetails?.userFullName}</p>
+                                <p className="user-id">
+                                    {adminDetails?.userType === "Student"
+                                        ? adminDetails?.admissionId
+                                        : adminDetails?.employeeId}
+                                </p>
+                                <p className="user-email">{adminDetails?.email}</p>
+                                <p className="user-phone">{adminDetails?.mobileNumber}</p>
+                            </div>
+                        </div>
+                        <div className="user-details-specific">
+                            <div className="specific-left">
+                                <div className="specific-left-top">
+                                    <div className="specific-left-topic">
+                                        <span style={{ fontSize: "18px" }}>
+                                            <b>Age</b>
+                                        </span>
+                                        <span style={{ fontSize: "16px" }}>
+                                            {adminDetails?.age}
+                                        </span>
+                                    </div>
+                                    <div className="specific-left-topic">
+                                        <span style={{ fontSize: "18px" }}>
+                                            <b>Gender</b>
+                                        </span>
+                                        <span style={{ fontSize: "16px" }}>
+                                            {adminDetails?.gender}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="specific-left-bottom">
+                                    <div className="specific-left-topic">
+                                        <span style={{ fontSize: "18px" }}>
+                                            <b>DOB</b>
+                                        </span>
+                                        <span style={{ fontSize: "16px" }}>
+                                            {adminDetails?.dob}
+                                        </span>
+                                    </div>
+                                    <div className="specific-left-topic">
+                                        <span style={{ fontSize: "18px" }}>
+                                            <b>Address</b>
+                                        </span>
+                                        <span style={{ fontSize: "16px" }}>
+                                            {adminDetails?.address}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="specific-right">
+                                <div className="specific-right-top">
+                                    <p className="specific-right-topic"><b>Role</b></p>
+                                    <p style={{ fontSize: "25px", fontWeight: "500", display: "flex", alignItems: "center", justifyContent: "center", marginTop: "15px" }}>
+                                        {adminDetails?.userType || "Admin"}
+                                    </p>
+                                </div>
+                                <div className="dashboard-title-line"></div>
+                                <div className="specific-right-bottom">
+                                    <p className="specific-right-topic"><b>Status</b></p>
+                                    <p style={{ fontSize: "25px", fontWeight: "500", display: "flex", alignItems: "center", justifyContent: "center", marginTop: "15px" }}>
+                                        Active
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div className="dashboard-addbooks-content" style={active !== "addbook" ? { display: 'none' } : {}}>
                         <AddBook />
                     </div>

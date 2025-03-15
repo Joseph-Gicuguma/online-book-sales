@@ -4,10 +4,12 @@ import axios from "axios"
 import { Dropdown } from 'semantic-ui-react'
 import '../../MemberDashboard/MemberDashboard.css'
 import moment from "moment"
+import { useAlert } from '../../../../Context/AlertContext'
 
 function GetMember() {
 
     const API_URL = process.env.REACT_APP_API_URL
+    const { success, error, warning, info } = useAlert()
 
     const [allMembersOptions, setAllMembersOptions] = useState(null)
     const [memberId, setMemberId] = useState(null)
@@ -24,10 +26,11 @@ function GetMember() {
             }
             catch (err) {
                 console.log(err)
+                error("Failed to load members. Please try again.")
             }
         }
         getMembers()
-    }, [API_URL])
+    }, [API_URL, error])
 
 
     useEffect(() => {
@@ -39,11 +42,12 @@ function GetMember() {
                 }
                 catch (err) {
                     console.log("Error in fetching the member details")
+                    error("Failed to load member details. Please try again.")
                 }
             }
         }
         getMemberDetails()
-    }, [API_URL, memberId])
+    }, [API_URL, memberId, error])
 
 
     return (

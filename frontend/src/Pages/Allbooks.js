@@ -2,11 +2,13 @@ import React, { useContext, useEffect, useState } from "react";
 import "./Allbooks.css";
 import axios from "axios";
 import { AuthContext } from "../Context/AuthContext";
+import { useAlert } from "../Context/AlertContext";
 import moment from "moment";
 
 function Allbooks() {
   const API_URL = process.env.REACT_APP_API_URL;
   const { user } = useContext(AuthContext);
+  const { success, error, warning, info } = useAlert();
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -18,15 +20,16 @@ function Allbooks() {
         setBooks(response.data);
       } catch (error) {
         console.error("Error fetching books:", error);
+        error("Failed to load books. Please try again later.");
       }
     };
     fetchBooks();
-  }, [API_URL]);
+  }, [API_URL, error]);
 
   // Function to borrow a book
   const borrowBook = async (bookId, bookName) => {
     if (!user) {
-      alert("Please log in to borrow books");
+      warning("Please log in to borrow books");
       return;
     }
 
@@ -37,7 +40,7 @@ function Allbooks() {
       const book = bookResponse.data;
 
       if (book.bookCountAvailable <= 0) {
-        alert("This book is not available for borrowing");
+        warning("This book is not available for borrowing");
         setLoading(false);
         return;
       }
@@ -55,7 +58,7 @@ function Allbooks() {
       const borrowerId = user.admissionId || user.employeeId;
       
       if (!borrowerId) {
-        alert("Your user profile is missing an ID. Please contact an administrator.");
+        error("Your user profile is missing an ID. Please contact an administrator.");
         setLoading(false);
         return;
       }
@@ -82,14 +85,14 @@ function Allbooks() {
         bookCountAvailable: book.bookCountAvailable - 1
       });
 
-      alert("Book borrowed successfully! Return by " + toDateStr);
+      success(`Book borrowed successfully! Return by ${toDateStr}`);
       
       // Refresh book list
       const booksResponse = await axios.get(API_URL + "api/books/allbooks");
       setBooks(booksResponse.data);
-    } catch (error) {
-      console.error("Error borrowing book:", error);
-      alert("Failed to borrow book: " + (error.response?.data || error.message));
+    } catch (err) {
+      console.error("Error borrowing book:", err);
+      error("Failed to borrow book: " + (err.response?.data || err.message));
     }
     setLoading(false);
   };
