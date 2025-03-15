@@ -1,4 +1,4 @@
-# Library Management System 📚
+# Library Management Platform 📚
 
 A modern web application built on the MERN stack (MongoDB, Express, React, Node.js) for comprehensive library management. This system streamlines all aspects of library operations including member management, book transactions, reservations, and more.
 
